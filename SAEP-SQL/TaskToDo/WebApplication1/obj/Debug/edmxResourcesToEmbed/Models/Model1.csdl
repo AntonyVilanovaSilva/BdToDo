@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BdToDoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="StatusTarefa">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Descricao" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Tarefa" Relationship="Self.FK_Tarefa_StatusTarefa" FromRole="StatusTarefa" ToRole="Tarefa" />
+  </EntityType>
+  <EntityType Name="Tarefa">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Data" Type="DateTime" Precision="3" />
+    <Property Name="Descricao" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="IDStatus" Type="Int32" Nullable="false" />
+    <Property Name="IDUsuario" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="StatusTarefa" Relationship="Self.FK_Tarefa_StatusTarefa" FromRole="Tarefa" ToRole="StatusTarefa" />
+    <NavigationProperty Name="Usuário" Relationship="Self.FK_Tarefa_Usuário" FromRole="Tarefa" ToRole="Usuário" />
+  </EntityType>
+  <EntityType Name="Usuário">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Tarefa" Relationship="Self.FK_Tarefa_Usuário" FromRole="Usuário" ToRole="Tarefa" />
+  </EntityType>
+  <Association Name="FK_Tarefa_StatusTarefa">
+    <End Role="StatusTarefa" Type="Self.StatusTarefa" Multiplicity="1" />
+    <End Role="Tarefa" Type="Self.Tarefa" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StatusTarefa">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Tarefa">
+        <PropertyRef Name="IDStatus" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tarefa_Usuário">
+    <End Role="Usuário" Type="Self.Usuário" Multiplicity="1" />
+    <End Role="Tarefa" Type="Self.Tarefa" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Usuário">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Tarefa">
+        <PropertyRef Name="IDUsuario" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BdToDoEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="StatusTarefa" EntityType="Self.StatusTarefa" />
+    <EntitySet Name="Tarefa" EntityType="Self.Tarefa" />
+    <EntitySet Name="Usuário" EntityType="Self.Usuário" />
+    <AssociationSet Name="FK_Tarefa_StatusTarefa" Association="Self.FK_Tarefa_StatusTarefa">
+      <End Role="StatusTarefa" EntitySet="StatusTarefa" />
+      <End Role="Tarefa" EntitySet="Tarefa" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tarefa_Usuário" Association="Self.FK_Tarefa_Usuário">
+      <End Role="Usuário" EntitySet="Usuário" />
+      <End Role="Tarefa" EntitySet="Tarefa" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
